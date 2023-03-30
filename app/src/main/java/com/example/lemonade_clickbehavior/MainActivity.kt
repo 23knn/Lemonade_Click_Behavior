@@ -5,20 +5,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.sp
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LemonadeApp(modifier = Modifier.fillMaxWidth())
+            LemonadeApp(modifier = Modifier.fillMaxSize())
         }
     }
 }
@@ -31,7 +32,7 @@ fun LemonadeApp(
         mutableStateOf(1)
     }
     var tapsLeftForSqueezing by remember {
-        mutableStateOf(0)
+        mutableStateOf((2..4).random())
     }
 
     var selectedImage = when(sequenceState){
@@ -48,15 +49,26 @@ fun LemonadeApp(
         else -> R.string.restart
     }
     fun onClickImage(){
-        sequenceState++
+        if(sequenceState == 2){
+            println(tapsLeftForSqueezing)
+            if(tapsLeftForSqueezing > 0){
+                tapsLeftForSqueezing--
+            }else{
+                tapsLeftForSqueezing = (2..4).random()
+                sequenceState++
+            }
+        }else{
+            sequenceState++
+            sequenceState %= 4
+        }
     }
 
-    Column(modifier = modifier) {
-        Text(text = stringResource(id = topText))
+    Column(modifier = modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = stringResource(id = topText), fontSize = 20.sp)
         Image(
             painter = painterResource(id = selectedImage),
             contentDescription = stringResource(id = topText),
-            modifier = Modifier.clickable(onClick = {sequenceState = ((sequenceState+1)%4)})
+            modifier = Modifier.clickable(onClick = {onClickImage()})
         )
     }
 }
