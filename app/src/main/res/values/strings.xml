@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Lemonade - Click Behavior</string>
+    <string name="tap_tree">Tap the lemon tree to get a lemon</string>
+    <string name="squeeze">Keep tapping the lemon to squeeze it</string>
+    <string name="drink">Tap the lemonade to drink it</string>
+    <string name="restart">Tap the empty glass to start again</string>
 </resources>

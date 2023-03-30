@@ -3,41 +3,61 @@ package com.example.lemonade_clickbehavior
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.lemonade_clickbehavior.ui.theme.LemonadeClickBehaviorTheme
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LemonadeClickBehaviorTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
-            }
+            LemonadeApp(modifier = Modifier.fillMaxWidth())
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+fun LemonadeApp(
+    modifier:Modifier = Modifier,
+){
+    var sequenceState by remember {
+        mutableStateOf(1)
+    }
+    var tapsLeftForSqueezing by remember {
+        mutableStateOf(0)
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LemonadeClickBehaviorTheme {
-        Greeting("Android")
+    var selectedImage = when(sequenceState){
+        1 -> R.drawable.lemon_tree
+        2 -> R.drawable.lemon_squeeze
+        3 -> R.drawable.lemon_drink
+        else -> R.drawable.lemon_restart
+    }
+
+    var topText = when(sequenceState){
+        1 -> R.string.tap_tree
+        2 -> R.string.squeeze
+        3 -> R.string.drink
+        else -> R.string.restart
+    }
+    fun onClickImage(){
+        sequenceState++
+    }
+
+    Column(modifier = modifier) {
+        Text(text = stringResource(id = topText))
+        Image(
+            painter = painterResource(id = selectedImage),
+            contentDescription = stringResource(id = topText),
+            modifier = Modifier.clickable(onClick = {sequenceState = ((sequenceState+1)%4)})
+        )
     }
 }
+
